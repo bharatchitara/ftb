@@ -1,0 +1,4 @@
+*.pyc
+.vscode/*
+ftb.ini
+.DS_Store

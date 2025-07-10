@@ -1,0 +1,72 @@
+
+/* ------------------------------------------------------------------ */
+/* 1.  Core page containers: full‑width, full‑height, no margins      */
+/* ------------------------------------------------------------------ */
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;                 
+  justify-content: center;      
+  align-items:    center;        
+}
+
+/* ------------------------------------------------------------------ */
+/* 2.  Center everything with flexbox and paint the gradient on <body> */
+/* ------------------------------------------------------------------ */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #7dd3fc 0%, #c084fc 100%);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ------------------------------------------------------------------ */
+/* 3.  The frosted‑glass card                                         */
+/* ------------------------------------------------------------------ */
+.card {
+  text-align: center;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.85);
+  padding: 3rem 2.5rem;
+  border-radius: 1.25rem;        /* 20 px */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  max-width: 420px;
+  width: 90%;
+}
+
+/* ------------------------------------------------------------------ */
+/* 4.  Typography                                                     */
+/* ------------------------------------------------------------------ */
+.title {
+  margin: 0;
+  font-size: 2.25rem;            /* ≈36 px */
+  font-weight: 600;
+  line-height: 1.2;
+}
+.subtitle {
+  margin: 0.75rem 0 2rem;
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+/* ------------------------------------------------------------------ */
+/* 5.  Login button                                                   */
+/* ------------------------------------------------------------------ */
+.btn {
+  display: inline-block;
+  padding: 0.65rem 1.5rem;
+  border-radius: 8px;
+  background: #2563eb;           /* indigo‑600 */
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.btn:hover {
+  transform: translateY(-3px);
+  opacity: 0.9;
+}

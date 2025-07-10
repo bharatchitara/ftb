@@ -1,0 +1,7 @@
+.vscode/*
+ftb_venv/*
+.DS_Store
+ftb.ini
+*.pyc
+node_modules/*
+node_modules

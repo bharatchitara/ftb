@@ -1,0 +1,87 @@
+/* Center everything */
+.otp-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background: linear-gradient(135deg, #a1c4fd, #c2e9fb); */
+}
+
+/* Card look */
+.otp-card {
+  background: #f9faff;
+  padding: 3rem;
+  border-radius: 2rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  min-width: 320px;
+}
+
+/* Input styles */
+.otp-email-input {
+  width: 100%;
+  padding: 12px 16px;
+  margin-top: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+/* Button styles */
+.otp-button {
+  margin-top: 1.5rem;
+  padding: 12px 20px;
+  background: #4a90e2;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.otp-button:hover {
+  background: #357abd;
+}
+
+/* OTP digit boxes */
+.otp-boxes {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.otp-digit-box {
+  width: 48px;
+  height: 56px;
+  font-size: 24px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+.otp-digit-box:focus {
+  border-color: #4a90e2;
+}
+
+
+.otp-resend {
+  margin-top: 1rem;
+  font-size: 14px;
+  color: #444;
+}
+
+.otp-resend-btn {
+  background: none;
+  border: none;
+  color: #357abd;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+}
+.otp-resend-btn:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,111 @@
+<!--Application landing page-->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- Font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/fontawesome.min.css" integrity="sha512-d0olNN35C6VLiulAobxYHZiXJmq+vl+BGIgAxQtD5+kqudro/xNMvv2yIHAciGHpExsIbKX3iLg+0B6d0k4+ZA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+    <!-- load custom css files-->
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <style>
+
+    </style>
+  </head>
+    <body>
+    <div class = "tb_home_full_page">
+       <div class = "flex-container tb_home_flex_container">
+            <div class = "container tb_home_main_container">
+                <!--header row-starts-->
+                <div class = "row justify-content-center tb_home_div_main_header">
+                    <div class="col-md-6">
+                        <div class="text-center tb_home_header_text">
+                            Find Travel Buddy
+                            <h6 class= 'tb_home_subheader'>Tool to share a ride with A Co-Worker </h6>
+                        </div>
+                    </div>
+                </div>
+                <!--header row-ends-->
+
+                <!--body row-starts-->
+                <div class = "row justify-content-center tb_home_div_main_body">
+                    <div class = "col-md-6">
+
+                        <div class="card p-4 text-center tb_home_number_input_card">
+                            <h5>Log in or sign up</h5>
+                            <form>
+                                <div class="form-group row tb_home_mobile_input">
+                                    <div class="col-sm-3">
+                                        <select class="form-select" id="countryCode">
+                                            <option value="IND">IND (+91)</option>
+                                            <option value="US">US (+1)</option>
+                                            <option value="UK">UK (+44)</option>
+                                            <!-- Add more country options here -->
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="tel" class="form-control" id="phoneNumber" placeholder="Enter phone number">
+                                    </div>
+
+                                    <div class = "justify-content-center tb_home_div_send_otp">
+                                        <button type ="button" class = "btn btn-dark tb_home_btn_send_otp" id="send_otp" disabled>Send OTP</button>  
+                                    </div>
+
+                                </div>
+
+                                <div class = "form-group row tb_home_otp_input">
+                                    <h5>OTP Verification</h5>
+                                    <p>Enter the 6-digit code sent to your Mobile.</p>
+                                    <div class="otp-input d-flex justify-content-center">
+                                        <input class="m-2 text-center form-control rounded" type="text" id="first" maxlength="1" />
+                                        <input class="m-2 text-center form-control rounded" type="text" id="second" maxlength="1" />
+                                        <input class="m-2 text-center form-control rounded" type="text" id="third" maxlength="1" />
+                                        <input class="m-2 text-center form-control rounded" type="text" id="fourth" maxlength="1" />
+                                        <input class="m-2 text-center form-control rounded" type="text" id="fifth" maxlength="1" />
+                                        <input class="m-2 text-center form-control rounded" type="text" id="sixth" maxlength="1" />
+                                    </div>
+                                    <div class = 'tb_home_msg_invalid_otp_err'>
+                                        Invalid OTP entered.
+                                    </div>
+                                    <div class = 'tb_home_msg_resent_otp_wrn'>
+                                        OTP Resent successfully.
+                                    </div>
+                                    <div class = "justify-content-center tb_home_div_verify_otp">
+                                        <p>Didn't receive the code <a href="resend_otp" class = "tb_home_resend_otp_link" >Re-send</a></p>
+
+                                        <button type ="button" class="btn btn-dark tb_home_btn_verify_otp" id = "verify_otp" disabled>Verify OTP</button>
+                                    </div>
+                                </div>
+                            </form>
+                           
+                        </div>
+
+                    </div>
+                </div>
+                <!--body row-ends-->
+
+                <!--footer row-starts-->
+                <div class = "row justify-content-center tb_home_div_main_footer">
+                    <p><a href = "">@copyright 2024</a></p>
+                    <p><a href = "dev_info">Developer Info</a></p>
+                    <p><a href = "contact_us">Contact Us</a></p>
+                </div>
+                <!--footer row-ends-->
+            </div>
+        </div>
+    </div>
+
+        <script>
+        </script>
+    <body>
+</html>

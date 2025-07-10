@@ -1,0 +1,1 @@
+pip install nodeenv && nodeenv -p --node=20.12.2
