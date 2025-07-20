@@ -2,11 +2,11 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 import hashlib, random, string
+from userlogin.models import FTBUsers
 
-User = get_user_model()
 
 class OneTimeCode(models.Model):
-    user= models.ForeignKey(User, on_delete=models.CASCADE)
+    user= models.ForeignKey(FTBUsers, on_delete=models.CASCADE)
     code_hash = models.CharField(max_length=128)
     created_at = models.DateTimeField(default=timezone.now)
     expires_at = models.DateTimeField()

@@ -1,5 +1,5 @@
-from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django.contrib.auth.models import User
 from django.utils import timezone
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -9,9 +9,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 import hashlib, random, string
 
 from .models import OneTimeCode
+from userlogin.models import FTBUsers
 from .serializers import OTPRequestSerializer, OTPVerifySerializer
 
-User = get_user_model()
+
 
 class OTPRequestView(generics.GenericAPIView):
     permission_classes = [AllowAny]
@@ -21,8 +22,17 @@ class OTPRequestView(generics.GenericAPIView):
         data = self.get_serializer(data=request.data)
         data.is_valid(raise_exception=True)
         email = data.validated_data["email"]
+        
+        try:
+            auth_user, created = User.objects.get_or_create(
+                username=email,
+                defaults={'email': email, 'password': ''}
+            )
+        except Exception as e:
+            print(f"Error creating or getting user: {e}")
+            auth_user = None
 
-        user, _ = User.objects.get_or_create(username=email, defaults={"email": email})
+        user, _ = FTBUsers.objects.get_or_create(email=email, defaults={"email": email, "profile_completed": False, "user": auth_user})
         otp_obj, raw_code = OneTimeCode.generate_code(user)
 
         send_mail(
@@ -44,9 +54,9 @@ class OTPVerifyView(generics.GenericAPIView):
         code  = data.validated_data["code"]
 
         try:
-            user = User.objects.get(email=email)
+            user = FTBUsers.objects.get(email=email)
             otp   = OneTimeCode.objects.filter(user=user).latest("created_at")
-        except (User.DoesNotExist, OneTimeCode.DoesNotExist):
+        except Exception as e :
             return Response({"detail": "Invalid"}, status=status.HTTP_400_BAD_REQUEST)
 
         expected_hash = hashlib.sha256(code.encode()).hexdigest()
@@ -55,7 +65,7 @@ class OTPVerifyView(generics.GenericAPIView):
             return Response({"detail": "Invalid or expired"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-        refresh = RefreshToken.for_user(user)
+        refresh = RefreshToken.for_user(FTBUsers)
         return Response(
             {"access": str(refresh.access_token), "refresh": str(refresh)},
             status=status.HTTP_200_OK,
@@ -66,4 +76,11 @@ class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response({"email": request.user.email})
+        try:
+            ftb_user = FTBUsers.objects.get(user=request.user)
+            return Response({
+                "email": ftb_user.email,
+                "profile_completed": ftb_user.profile_completed
+            })
+        except FTBUsers.DoesNotExist:
+            return Response({"error": "User profile not found"}, status=404)

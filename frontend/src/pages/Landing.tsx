@@ -16,9 +16,19 @@ export default function MainPage() {
     }
 
     api.get('/auth/me/')
-      .then((res) => setEmail(res.data.email))
+      .then((res) => {
+        console.log(res);
+        setEmail(res.data.email);
+        if (!res.data.profile_completed) {
+          navigate('/profiles'); 
+        }
+        else{
+          navigate('/dashboard');
+        }
+      })
       .catch(() => navigate('/login'));
   }, []);
+
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
@@ -37,22 +47,6 @@ export default function MainPage() {
           <button onClick={handleLogout}>Logout</button>
         </div>
       </header>
-
-      <div className="mode-toggle-container">
-        <div className="mode-switch">
-          <span className={mode === 'rider' ? 'active-label' : ''}>Rider</span>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={mode === 'driver'}
-              onChange={() => setMode(mode === 'rider' ? 'driver' : 'rider')}
-            />
-            <span className="slider round"></span>
-          </label>
-          <span className={mode === 'driver' ? 'active-label' : ''}>Driver</span>
-        </div>
-      </div>
-
 
       <main className="main-content">
         {mode === 'rider' ? (

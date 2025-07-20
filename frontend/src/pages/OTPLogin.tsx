@@ -12,8 +12,7 @@ export default function OTPLogin() {
 
   const otpRefs = Array.from({ length: 6 }, () => useRef<HTMLInputElement>(null));
   const [otpValues, setOtpValues] = useState(Array(6).fill(''));
-
-  // 🔁 Resend timer state
+  const [role, setRole] = useState<'rider' | 'driver'>('rider');
   const [cooldown, setCooldown] = useState(0);
 
   useEffect(() => {
@@ -36,13 +35,14 @@ export default function OTPLogin() {
     alert("OTP resent!");
   };
 
-    const verifyOTP = async () => {
+  const verifyOTP = async () => {
     const code = otpValues.join('');
     try {
       const res = await api.post('/auth/otp/verify/', { email, code });
       localStorage.setItem('access_token', res.data.access);
       localStorage.setItem('refresh_token', res.data.refresh);
-      navigate('/dashboard');
+      localStorage.setItem('user_role', role);
+      navigate('/profile');
     } catch (error) {
       alert('Invalid or expired OTP');
     }
@@ -59,6 +59,7 @@ export default function OTPLogin() {
   return (
     <div className="otp-container">
       {step === 'email' ? (
+        
         <form onSubmit={handleSubmit(sendOTP)} className="otp-card">
           <h2>Email login</h2>
           <input
@@ -67,8 +68,24 @@ export default function OTPLogin() {
             placeholder="Enter your email"
             className="otp-email-input"
           />
+
+          <div className="role-toggle-container">
+            <label className="role-label">Select Role:</label>
+            <span className={role === 'rider' ? 'active-label' : ''}>Rider</span>
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={role === 'driver'}
+                onChange={() => setRole(role === 'rider' ? 'driver' : 'rider')}
+              />
+              <span className="slider round"></span>
+            </label>
+            <span className={role === 'driver' ? 'active-label' : ''}>Driver</span>
+          </div>
+
           <button type="submit" className="otp-button">Send code</button>
         </form>
+
       ) : (
         <div className="otp-card">
           <h2>Enter OTP</h2>
