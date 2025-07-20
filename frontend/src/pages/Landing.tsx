@@ -5,6 +5,7 @@ import './Landing.css';
 
 export default function MainPage() {
   const [email, setEmail] = useState('');
+  const [mode, setMode] = useState<'rider' | 'driver'>('rider');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,14 +31,41 @@ export default function MainPage() {
       <header className="main-header">
         <h1>Find Travel Buddy</h1>
         <div className="main-user">
-          <span>{email}</span>
+          <div className="avatar-circle">
+            {email.charAt(0).toUpperCase()}
+          </div>
           <button onClick={handleLogout}>Logout</button>
         </div>
       </header>
 
+      <div className="mode-toggle-container">
+        <div className="mode-switch">
+          <span className={mode === 'rider' ? 'active-label' : ''}>Rider</span>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={mode === 'driver'}
+              onChange={() => setMode(mode === 'rider' ? 'driver' : 'rider')}
+            />
+            <span className="slider round"></span>
+          </label>
+          <span className={mode === 'driver' ? 'active-label' : ''}>Driver</span>
+        </div>
+      </div>
+
+
       <main className="main-content">
-        <h2>Welcome!</h2>
-        <p>You are now logged in. Start exploring your travel matches soon 🎒</p>
+        {mode === 'rider' ? (
+          <>
+            <h2>Welcome Rider!</h2>
+            <p>You are now logged in. Start exploring your travel matches soon 🎒</p>
+          </>
+        ) : (
+          <>
+            <h2>Welcome Driver!</h2>
+            <p>Ready to offer rides and connect with travelers 🚗</p>
+          </>
+        )}
       </main>
     </div>
   );

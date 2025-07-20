@@ -27,7 +27,7 @@ export default function OTPLogin() {
     await api.post('/auth/otp/request/', data);
     setEmail(data.email);
     setStep('otp');
-    setCooldown(30); // 30 second cooldown
+    setCooldown(30); 
   };
 
   const resendOTP = async () => {

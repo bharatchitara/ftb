@@ -4,7 +4,7 @@ from django.utils import timezone
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated , AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 import hashlib, random, string
 
@@ -14,6 +14,7 @@ from .serializers import OTPRequestSerializer, OTPVerifySerializer
 User = get_user_model()
 
 class OTPRequestView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
     serializer_class = OTPRequestSerializer
 
     def post(self, request):
@@ -48,14 +49,12 @@ class OTPVerifyView(generics.GenericAPIView):
         except (User.DoesNotExist, OneTimeCode.DoesNotExist):
             return Response({"detail": "Invalid"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # hash & compare
         expected_hash = hashlib.sha256(code.encode()).hexdigest()
         
         if expected_hash != otp.code_hash or timezone.now() > otp.expires_at:
             return Response({"detail": "Invalid or expired"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-        # success → issue JWT
         refresh = RefreshToken.for_user(user)
         return Response(
             {"access": str(refresh.access_token), "refresh": str(refresh)},
