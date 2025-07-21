@@ -10,6 +10,8 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<OTPLogin />} />
         <Route path="/dashboard" element={<MainPage />} /> 
+        
+        <Route path="/profile" element={<MainPage />} />
       
       </Routes>
     </BrowserRouter>

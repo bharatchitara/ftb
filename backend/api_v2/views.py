@@ -84,3 +84,29 @@ class MeView(APIView):
             })
         except FTBUsers.DoesNotExist:
             return Response({"error": "User profile not found"}, status=404)
+
+
+
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            profile = FTBUsers.objects.get(user=request.user)
+            serializer = FTBUserSerializer(profile)
+            return Response(serializer.data)
+        except FTBUsers.DoesNotExist:
+            return Response({'error': 'Profile not found'}, status=404)
+
+    def put(self, request):
+        try:
+            profile = FTBUsers.objects.get(user=request.user)
+            serializer = FTBUserSerializer(profile, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save(profile_completed=True)  
+                # Mark profile as completed
+                return Response(serializer.data)
+            return Response(serializer.errors, status=400)
+        except FTBUsers.DoesNotExist:
+            return Response({'error': 'Profile not found'}, status=404)
+

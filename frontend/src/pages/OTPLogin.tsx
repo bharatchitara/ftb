@@ -42,7 +42,8 @@ export default function OTPLogin() {
       localStorage.setItem('access_token', res.data.access);
       localStorage.setItem('refresh_token', res.data.refresh);
       localStorage.setItem('user_role', role);
-      navigate('/profile');
+      navigate('/dashboard'); 
+      
     } catch (error) {
       alert('Invalid or expired OTP');
     }

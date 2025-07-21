@@ -6,3 +6,13 @@ class OTPRequestSerializer(serializers.Serializer):
 class OTPVerifySerializer(serializers.Serializer):
     email = serializers.EmailField()
     code  = serializers.CharField(max_length=6)
+
+class ProfileSerializer(serializers.Serializer):
+    class Meta:
+        model = FTBUsers
+        fields = [
+            'name', 'email', 'phone', 'gender',
+            'address', 'latitude', 'longitude',
+            'profile_completed'
+        ]
+

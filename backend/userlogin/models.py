@@ -19,6 +19,12 @@ class FTBUsers(models.Model):
     updated_at= models.DateTimeField( auto_now=True)
     profile_completed = models.BooleanField(blank=True, null=True)
 
+    gender = models.CharField(max_length=10, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    latitude = models.TextField(blank=True, null=True)
+    longitude = models.TextField(blank=True, null=True)
+
+
     def __str__(self):
         return str(self.name)
 

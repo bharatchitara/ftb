@@ -20,11 +20,9 @@ export default function MainPage() {
         console.log(res);
         setEmail(res.data.email);
         if (!res.data.profile_completed) {
-          navigate('/profiles'); 
+          navigate('/profile'); 
         }
-        else{
-          navigate('/dashboard');
-        }
+        
       })
       .catch(() => navigate('/login'));
   }, []);
