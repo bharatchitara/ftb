@@ -1,7 +1,3 @@
-
-/* ------------------------------------------------------------------ */
-/* 1.  Core page containers: full‑width, full‑height, no margins      */
-/* ------------------------------------------------------------------ */
 html,
 body,
 #root {
@@ -13,20 +9,14 @@ body,
   align-items:    center;        
 }
 
-/* ------------------------------------------------------------------ */
-/* 2.  Center everything with flexbox and paint the gradient on <body> */
-/* ------------------------------------------------------------------ */
 body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #7dd3fc 0%, #c084fc 100%);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* ------------------------------------------------------------------ */
-/* 3.  The frosted‑glass card                                         */
-/* ------------------------------------------------------------------ */
 .card {
   text-align: center;
   backdrop-filter: blur(12px);
@@ -38,12 +28,9 @@ body {
   width: 90%;
 }
 
-/* ------------------------------------------------------------------ */
-/* 4.  Typography                                                     */
-/* ------------------------------------------------------------------ */
 .title {
   margin: 0;
-  font-size: 2.25rem;            /* ≈36 px */
+  font-size: 2.25rem;            
   font-weight: 600;
   line-height: 1.2;
 }
@@ -53,19 +40,18 @@ body {
   opacity: 0.8;
 }
 
-/* ------------------------------------------------------------------ */
-/* 5.  Login button                                                   */
-/* ------------------------------------------------------------------ */
+
 .btn {
   display: inline-block;
   padding: 0.65rem 1.5rem;
   border-radius: 8px;
-  background: #2563eb;           /* indigo‑600 */
+  background: #2563eb;           
   color: #fff;
   font-weight: 500;
   text-decoration: none;
   transition: transform 0.15s, opacity 0.15s;
 }
+
 .btn:hover {
   transform: translateY(-3px);
   opacity: 0.9;

@@ -39,6 +39,7 @@ export default function OTPLogin() {
     const code = otpValues.join('');
     try {
       const res = await api.post('/auth/otp/verify/', { email, code });
+      console.log(res);
       localStorage.setItem('access_token', res.data.access);
       localStorage.setItem('refresh_token', res.data.refresh);
       localStorage.setItem('user_role', role);
