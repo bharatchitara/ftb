@@ -98,6 +98,10 @@ class ProfileView(APIView):
             if serializer.is_valid():
                 serializer.save(profile_completed=True)
                 return Response(serializer.data)
-            return Response(serializer.errors, status=400)
+
+            if ('Ensure this field has no more than 10 characters.' in str(serializer.errors['phone'][0]) ):
+                return Response("Phone number have more then 10 digits", status=400)
+            else:
+                return Response("Failed to update profile. Please check your inputs and try again.", status=400)
         except FTBUsers.DoesNotExist:
             return Response({'error': 'Profile not found'}, status=404)

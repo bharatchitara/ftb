@@ -6,8 +6,29 @@
   background: linear-gradient(to right, #a1c4fd, #c2e9fb);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #222;
-  padding: 2rem;
+  overflow-y: auto; /* ensures scroll instead of cut-off */
+
 }
+
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+}
+
+.profile-header {
+  flex-shrink: 0;
+}
+
+.profile-scrollable {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
 
 .profile-container {
   background-color: #ffffff;
@@ -16,13 +37,14 @@
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
+  padding: 1rem;
 }
 
 .profile-container h2 {
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   color: #333;
 }
 

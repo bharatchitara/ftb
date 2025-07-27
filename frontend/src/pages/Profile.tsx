@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import Header from '../components/Header';
+import OverlayTransition from '../components/OverlayTransition';
 import './Profile.css';
 
 export default function ProfilePage() {
@@ -15,20 +16,29 @@ export default function ProfilePage() {
   });
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [profileCompleted, setProfileCompleted] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     api.get('/auth/profile/')
       .then((res) => {
+        const data = res.data;
         setFormData({
-          name: res.data.name || '',
-          gender: res.data.gender || '',
-          phone: res.data.phone || '',
-          address: res.data.address || '',
-          latitude: res.data.latitude || '',
-          longitude: res.data.longitude || '',
+          name: data.name || '',
+          gender: data.gender || '',
+          phone: data.phone || '',
+          address: data.address || '',
+          latitude: data.latitude || '',
+          longitude: data.longitude || '',
         });
-        setEmail(res.data.email || '');
+        setEmail(data.email || '');
+
+        // Check if profile is completed
+        if (data.name && data.gender) {
+          setProfileCompleted(true);
+        }
       })
       .catch(() => navigate('/login'));
   }, []);
@@ -42,9 +52,10 @@ export default function ProfilePage() {
     setError('');
     try {
       await api.put('/auth/profile/', formData);
-      navigate('/dashboard');
+      setShowOverlay(true);
+
     } catch (error) {
-      setError('Failed to update profile. Please check your inputs and try again.');
+      setError(error.response.data);
     }
   };
 
@@ -56,49 +67,95 @@ export default function ProfilePage() {
 
   return (
     <div className="profile-page">
-      <Header email={email} onLogout={handleLogout} />
+      <div className="profile-header">
+        <Header email={email} onLogout={handleLogout} profileCompleted={profileCompleted} />
+      </div>
+      <div className="profile-scrollable">
+        <div className="profile-container">
+          <h2>Complete Your Profile</h2>
+          <form onSubmit={handleSubmit}>
+            <label>Name:
+              <input
+                type="text"
+                name="name"
+                disabled={profileCompleted}
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </label>
 
-      <div className="profile-container">
-        <h2>Complete Your Profile</h2>
-        <form onSubmit={handleSubmit}>
-          <label>Name:
-            <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-            <small>Enter your full name</small>
-          </label>
+            <label>Gender:
+              <select
+                name="gender"
+                disabled={profileCompleted}
+                value={formData.gender}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </label>
 
-          <label>Gender:
-            <select name="gender" value={formData.gender} onChange={handleChange} required>
-              <option value="">Select</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-            <small>Select your gender</small>
-          </label>
+            <label>Phone:
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
+              <small>Enter the 10 Digit Phone Number without the country code</small>
+            </label>
 
-          <label>Phone:
-            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
-            <small>Enter the 10 Digit Phone Number without the country code</small>
-          </label>
+            <label>Address:
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+              />
+            </label>
 
-          <label>Address:
-            <input type="text" name="address" value={formData.address} onChange={handleChange} required />
-            <small>Enter your current address</small>
-          </label>
+            <label>Latitude:
+              <input
+                type="text"
+                name="latitude"
+                value={formData.latitude}
+                onChange={handleChange}
+                required
+              />
+              <small>Get the Latitude from Google Maps</small>
+            </label>
 
-          <label>Latitude:
-            <input type="text" name="latitude" value={formData.latitude} onChange={handleChange} required />
-            <small>Get the Latitude from Google Maps</small>
-          </label>
+            <label>Longitude:
+              <input
+                type="text"
+                name="longitude"
+                value={formData.longitude}
+                onChange={handleChange}
+                required
+              />
+              <small>Get the Longitude from Google Maps</small>
+            </label>
 
-          <label>Longitude:
-            <input type="text" name="longitude" value={formData.longitude} onChange={handleChange} required />
-            <small>Get the Longitude from Google Maps</small>
-          </label>
+            {error && <div className="error-message">{error}</div>}
 
-          {error && <div className="error-message">{error}</div>}
+            {showOverlay && (
+              <OverlayTransition
+                message="Saving your profile, Redirecting to Dashboard..."
+                duration={5000}
+                onComplete={() => navigate('/dashboard')}
+              />
+            )}
 
-          <button type="submit">Save</button>
-        </form>
+
+            <button type="submit">Save</button>
+          </form>
+        </div>
       </div>
     </div>
   );

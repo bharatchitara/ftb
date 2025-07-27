@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import OTPLogin from './pages/OTPLogin';
 import MainPage from './pages/Landing'; 
 import ProfilePage from './pages/profile';
+import TransitionPage from './components/transition';
 
 export default function App() {
   return (
@@ -12,6 +13,8 @@ export default function App() {
         <Route path="/login" element={<OTPLogin />} />
         <Route path="/dashboard" element={<MainPage />} /> 
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/transition" element={<TransitionPage />} />
+
       
       </Routes>
     </BrowserRouter>
