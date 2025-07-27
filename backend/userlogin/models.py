@@ -1,5 +1,11 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+
+class VehicleType(models.TextChoices):
+    Car = "Car", _("Car")
+    Bike = "Bike", _("Bike")
 
 class FTBUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -26,8 +32,11 @@ class FTBUsers(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
 
     is_user_verified = models.BooleanField(default=False)
-    is_buddy = models.BooleanField(default=False)
+    is_driver = models.BooleanField(default=False)
     profile_completed = models.BooleanField(default=False)
+
+    vehicle_type = models.CharField(max_length=10, choices=VehicleType.choices,blank=True, null=True)
+    vehicle_number = models. TextField(blank=True, null=True)
 
     gender = models.CharField(max_length=10, blank=True, null=True)
     address = models.TextField(blank=True, null=True)

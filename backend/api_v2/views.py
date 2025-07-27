@@ -75,6 +75,7 @@ class MeView(APIView):
             return Response({
                 "email": ftb_user.email,
                 "profile_completed": ftb_user.profile_completed
+                "is_driver":ftb_user.is_driver 
             })
         except FTBUsers.DoesNotExist:
             return Response({"error": "User profile not found"}, status=404)
