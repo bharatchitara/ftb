@@ -9,7 +9,7 @@ import hashlib
 
 from .models import OneTimeCode
 from userlogin.models import FTBUsers
-from .serializers import OTPRequestSerializer, OTPVerifySerializer, ProfileSerializer
+from .serializers import OTPRequestSerializer, OTPVerifySerializer, ProfileSerializer, DriverProfileSerializer
 
 
 class OTPRequestView(generics.GenericAPIView):
@@ -23,7 +23,7 @@ class OTPRequestView(generics.GenericAPIView):
 
         ftb_user, _ = FTBUsers.objects.get_or_create(
             email=email,
-            defaults={"email": email, "profile_completed": False}
+            defaults={"email": email, "driver_profile_completed": False, "rider_profile_completed": False}
         )
 
         otp_obj, raw_code = OneTimeCode.generate_code(ftb_user)
@@ -45,6 +45,7 @@ class OTPVerifyView(generics.GenericAPIView):
         data.is_valid(raise_exception=True)
         email = data.validated_data["email"]
         code = data.validated_data["code"]
+        role = request.data.get("role") 
 
         try:
             user = FTBUsers.objects.get(email=email)
@@ -57,8 +58,14 @@ class OTPVerifyView(generics.GenericAPIView):
         if expected_hash != otp.code_hash or timezone.now() > otp.expires_at:
             return Response({"detail": "Invalid or expired"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Generate token manually using a dummy user object
-        refresh = RefreshToken.for_user(user)  # This assumes FTBUsers is compatible with JWT
+        # Set role
+        if role == "driver":
+            user.is_driver = True
+        else:
+            user.is_rider = True
+        user.save()
+
+        refresh = RefreshToken.for_user(user)
 
         return Response(
             {"access": str(refresh.access_token), "refresh": str(refresh)},
@@ -74,13 +81,16 @@ class MeView(APIView):
             ftb_user = FTBUsers.objects.get(email=request.user.email)
             return Response({
                 "email": ftb_user.email,
-                "profile_completed": ftb_user.profile_completed
-                "is_driver":ftb_user.is_driver 
+                "driver_profile_completed": ftb_user.driver_profile_completed,
+                "is_driver":ftb_user.is_driver ,
+                "rider_profile_completed": ftb_user.rider_profile_completed,
+                "is_rider":ftb_user.is_rider ,
             })
         except FTBUsers.DoesNotExist:
             return Response({"error": "User profile not found"}, status=404)
 
 
+## class for rider profile 
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -105,4 +115,33 @@ class ProfileView(APIView):
             else:
                 return Response("Failed to update profile. Please check your inputs and try again.", status=400)
         except FTBUsers.DoesNotExist:
-            return Response({'error': 'Profile not found'}, status=404)
+            return Response({'error': 'Rider Profile not found'}, status=404)
+
+
+## class for driver profile
+class DriverProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self , request):
+        try:
+            profile = FTBUsers.objects.get(email=request.user.email)
+            serializer = DriverProfileSerializer(profile)
+            return Response(serializer.data)
+        except FTBUsers.DoesNotExist:
+            return Response({'error': 'Driver Profile not found'}, status=404)
+
+
+    def put(self, request):
+        try:
+            profile = FTBUsers.objects.get(email=request.user.email)
+            serializer = ProfileSerializer(profile, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save(profile_completed=True)
+                return Response(serializer.data)
+
+            if ('Ensure this field has no more than 10 characters.' in str(serializer.errors['phone'][0]) ):
+                return Response("Phone number have more then 10 digits", status=400)
+            else:
+                return Response("Failed to update profile. Please check your inputs and try again.", status=400)
+        except FTBUsers.DoesNotExist:
+            return Response({'error': 'Rider Profile not found'}, status=404)

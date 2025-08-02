@@ -14,6 +14,15 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = [
             'name', 'email', 'phone', 'gender',
             'address', 'latitude', 'longitude',
-            'profile_completed'
+            'rider_profile_completed'
         ]
 
+class DriverProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FTBUsers
+        fields = [
+            'name', 'email', 'phone', 'gender',
+            'address', 'latitude', 'longitude',
+            'driver_profile_completed',
+            'vehicle_type', 'vehicle_number'
+        ]

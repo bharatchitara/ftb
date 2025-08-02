@@ -32,8 +32,12 @@ class FTBUsers(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
 
     is_user_verified = models.BooleanField(default=False)
+
     is_driver = models.BooleanField(default=False)
-    profile_completed = models.BooleanField(default=False)
+    driver_profile_completed = models.BooleanField(default=False)
+
+    is_rider = models.BooleanField(default=False)
+    rider_profile_completed = models.BooleanField(default=False)
 
     vehicle_type = models.CharField(max_length=10, choices=VehicleType.choices,blank=True, null=True)
     vehicle_number = models. TextField(blank=True, null=True)

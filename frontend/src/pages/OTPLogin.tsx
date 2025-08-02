@@ -23,7 +23,7 @@ export default function OTPLogin() {
   }, [cooldown]);
 
   const sendOTP = async (data: any) => {
-    await api.post('/auth/otp/request/', data);
+    await api.post('/auth/otp/request/', { email: data.email, role });
     setEmail(data.email);
     setStep('otp');
     setCooldown(30); 
@@ -38,8 +38,7 @@ export default function OTPLogin() {
   const verifyOTP = async () => {
     const code = otpValues.join('');
     try {
-      const res = await api.post('/auth/otp/verify/', { email, code });
-      console.log(res);
+      const res = await api.post('/auth/otp/verify/', { email, code, role });
       localStorage.setItem('access_token', res.data.access);
       localStorage.setItem('refresh_token', res.data.refresh);
       localStorage.setItem('user_role', role);

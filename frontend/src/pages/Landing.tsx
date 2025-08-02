@@ -7,13 +7,13 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 export default function MainPage() {
   const [email, setEmail] = useState('');
-  const [mode, setMode] = useState<'rider' | 'driver'>('rider');
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const navigate = useNavigate();
   const apiKey = import.meta.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+  const userRole = localStorage.getItem('user_role');
 
   useEffect(() => {
-    const access = localStorage.getItem('access_token');
+    const access = localStorage.getItem('access_token');  
 
     if (!access) {
       alert("You are not logged in. Redirecting to login page in 5 seconds...");
@@ -26,8 +26,13 @@ export default function MainPage() {
     api.get('/auth/me/')
       .then((res) => {
         setEmail(res.data.email);
-        if (!res.data.profile_completed) {
-          navigate('/profile');
+        console.log(res.data);
+        if (userRole === 'driver' && res.data.is_driver) {
+          navigate('/profile/driver');
+        }
+        
+        else if(userRole === 'rider' && res.data.is_rider){
+          navigate('/profile/driver');
         }
       })
       .catch(() => {
@@ -55,6 +60,7 @@ export default function MainPage() {
   const handleLogout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user_role');
     navigate('/login');
   };
 
@@ -70,24 +76,17 @@ export default function MainPage() {
       <Header email={email} onLogout={handleLogout} />
 
       <main className="main-content">
-        {mode === 'rider' ? (
-          <LoadScript googleMapsApiKey={apiKey}>
-            <GoogleMap
-              mapContainerStyle={mapContainerStyle}
-              center={center}
-              zoom={12}
-            >
-              {userLocation && (
-                <Marker position={userLocation} label="You" />
-              )}
-            </GoogleMap>
-          </LoadScript>
-        ) : (
-          <>
-            <h2>Welcome Driver!</h2>
-            <p>Ready to offer rides and connect with travelers</p>
-          </>
-        )}
+        <LoadScript googleMapsApiKey={apiKey}>
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={12}
+          >
+            {userLocation && (
+              <Marker position={userLocation} label="You" />
+            )}
+          </GoogleMap>
+        </LoadScript>
       </main>
     </div>
   );
