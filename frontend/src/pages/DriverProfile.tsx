@@ -148,7 +148,6 @@ export default function DriverProfilePage() {
             <label>Vehicle Type:
               <select
                 name="vehicle_type"
-                disabled={profileCompleted}
                 value={formData.vehicle_type}
                 onChange={handleChange}
                 required
@@ -163,7 +162,6 @@ export default function DriverProfilePage() {
               <input
                 type="text"
                 name="vehicle_number"
-                disabled={profileCompleted}
                 value={formData.vehicle_number}
                 onChange={handleChange}
                 required

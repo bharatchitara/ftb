@@ -107,7 +107,7 @@ class ProfileView(APIView):
             profile = FTBUsers.objects.get(email=request.user.email)
             serializer = ProfileSerializer(profile, data=request.data, partial=True)
             if serializer.is_valid():
-                serializer.save(profile_completed=True)
+                serializer.save(rider_profile_completed=True)
                 return Response(serializer.data)
 
             if ('Ensure this field has no more than 10 characters.' in str(serializer.errors['phone'][0]) ):
@@ -136,7 +136,7 @@ class DriverProfileView(APIView):
             profile = FTBUsers.objects.get(email=request.user.email)
             serializer = ProfileSerializer(profile, data=request.data, partial=True)
             if serializer.is_valid():
-                serializer.save(profile_completed=True)
+                serializer.save(driver_profile_completed=True)
                 return Response(serializer.data)
 
             if ('Ensure this field has no more than 10 characters.' in str(serializer.errors['phone'][0]) ):

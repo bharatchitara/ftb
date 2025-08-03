@@ -27,12 +27,13 @@ export default function MainPage() {
       .then((res) => {
         setEmail(res.data.email);
         console.log(res.data);
-        if (userRole === 'driver' && res.data.is_driver) {
+        console.log(userRole);
+        if (userRole === 'driver' && !res.data.driver_profile_completed) {
           navigate('/profile/driver');
         }
         
-        else if(userRole === 'rider' && res.data.is_rider){
-          navigate('/profile/driver');
+        else if(userRole === 'rider' && !res.data.rider_profile_completed){
+          navigate('/profile/rider');
         }
       })
       .catch(() => {
