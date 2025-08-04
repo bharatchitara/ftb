@@ -145,3 +145,33 @@ class DriverProfileView(APIView):
                 return Response("Failed to update profile. Please check your inputs and try again.", status=400)
         except FTBUsers.DoesNotExist:
             return Response({'error': 'Rider Profile not found'}, status=404)
+
+
+
+class DriverLocationsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        drivers = FTBUsers.objects.filter(
+            is_driver=True,
+            driver_profile_completed=True,
+            latitude__isnull=False,
+            longitude__isnull=False
+        )
+        serializer = LocationSerializer(drivers, many=True)
+        return Response(serializer.data)
+
+
+
+class RiderLocationsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        riders = FTBUsers.objects.filter(
+            is_rider=True,
+            rider_profile_completed=True,
+            latitude__isnull=False,
+            longitude__isnull=False
+        )
+        serializer = LocationSerializer(riders, many=True)
+        return Response(serializer.data)
