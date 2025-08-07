@@ -9,7 +9,7 @@ import hashlib
 
 from .models import OneTimeCode
 from userlogin.models import FTBUsers
-from .serializers import OTPRequestSerializer, OTPVerifySerializer, ProfileSerializer, DriverProfileSerializer
+from .serializers import OTPRequestSerializer, OTPVerifySerializer, ProfileSerializer, DriverProfileSerializer , LocationSerializer
 
 
 class OTPRequestView(generics.GenericAPIView):

@@ -36,9 +36,24 @@ export default function MainPage() {
         }
 
         const endpoint = userRole === 'rider' ? '/drivers/locations/' : '/riders/locations/';
-        api.get(endpoint)
-          .then((res) => setOtherUsersLocations(res.data))
+        
+        api.get(endpoint).then((res) => {
+            const transformed = res.data
+              .map((user: any) => {
+                const lat = parseFloat(user.lat ?? user.latitude);
+                const lng = parseFloat(user.lng ?? user.longitude);
+                const label = user.label ?? user.name ?? user.email ?? `User ${user.id}`;
+
+                if (isNaN(lat) || isNaN(lng)) return null; // Skip invalid coordinates
+
+                return { lat, lng, label };
+              })
+              .filter((loc) => loc !== null); // Remove any invalid entries
+
+            setOtherUsersLocations(transformed);
+          })
           .catch((err) => console.error("Error fetching locations:", err));
+
       })
       .catch(() => {
         alert("Session expired or invalid token. Redirecting to login...");
@@ -58,6 +73,8 @@ export default function MainPage() {
         console.error("Error getting location:", error);
       }
     );
+
+    console.log(setUserLocation);
   }, []);
 
   const handleLogout = () => {

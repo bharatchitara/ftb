@@ -8,6 +8,6 @@ urlpatterns = [
     path("auth/profile/",ProfileView.as_view()),
     path("auth/driver_profile/", DriverProfileView.as_view()),
     path('drivers/locations/', DriverLocationsView.as_view(), name='driver_locations'),
-    path('riders/locations/', RiderLocationsView.as_view(), name='rider_locations'),
+    path('riders/locations/', RiderLocationsView.as_view(), name='rider_locations')
 
 ]
