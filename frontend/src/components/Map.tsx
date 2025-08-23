@@ -20,7 +20,7 @@ interface MapProps {
 
 const mapContainerStyle = {
   width: '100%',
-  height: '400px',
+  height: '100%',
 };
 
 export default function Map({

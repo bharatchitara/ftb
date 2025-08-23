@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { api } from '../api';
@@ -10,7 +10,6 @@ export default function OTPLogin() {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  const otpRefs = Array.from({ length: 6 }, () => useRef<HTMLInputElement>(null));
   const [otpValues, setOtpValues] = useState(Array(6).fill(''));
   const [role, setRole] = useState<'rider' | 'driver'>('rider');
   const [cooldown, setCooldown] = useState(0);
@@ -26,11 +25,12 @@ export default function OTPLogin() {
     await api.post('/auth/otp/request/', { email: data.email, role });
     setEmail(data.email);
     setStep('otp');
-    setCooldown(30); 
+    setCooldown(30);
   };
 
   const resendOTP = async () => {
     await api.post('/auth/otp/request/', { email });
+    setOtpValues(Array(6).fill(''));
     setCooldown(30);
     alert("OTP resent!");
   };
@@ -42,25 +42,20 @@ export default function OTPLogin() {
       localStorage.setItem('access_token', res.data.access);
       localStorage.setItem('refresh_token', res.data.refresh);
       localStorage.setItem('user_role', role);
-      navigate('/dashboard'); 
-      
+      navigate('/dashboard');
     } catch (error) {
       alert('Invalid or expired OTP');
     }
   };
 
-  const handleOTPChange = (index: number, value: string) => {
-    if (!/^\d?$/.test(value)) return;
-    const updated = [...otpValues];
-    updated[index] = value;
-    setOtpValues(updated);
-    if (value && index < 5) otpRefs[index + 1].current?.focus();
+  const handleSingleOTPChange = (value: string) => {
+    const sanitized = value.replace(/\D/g, '').slice(0, 6);
+    setOtpValues(sanitized.split(''));
   };
 
   return (
     <div className="otp-container">
       {step === 'email' ? (
-        
         <form onSubmit={handleSubmit(sendOTP)} className="otp-card">
           <h2>Email login</h2>
           <input
@@ -86,22 +81,17 @@ export default function OTPLogin() {
 
           <button type="submit" className="otp-button">Send code</button>
         </form>
-
       ) : (
         <div className="otp-card">
           <h2>Enter OTP</h2>
-          <div className="otp-boxes">
-            {otpRefs.map((ref, idx) => (
-              <input
-                key={idx}
-                ref={ref}
-                maxLength={1}
-                value={otpValues[idx]}
-                onChange={(e) => handleOTPChange(idx, e.target.value)}
-                className="otp-digit-box"
-              />
-            ))}
-          </div>
+          <input
+            type="text"
+            maxLength={6}
+            value={otpValues.join('')}
+            onChange={(e) => handleSingleOTPChange(e.target.value)}
+            className="otp-single-input"
+            placeholder=""
+          />
 
           <button onClick={verifyOTP} className="otp-button">Verify</button>
 

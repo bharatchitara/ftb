@@ -30,29 +30,24 @@ export default function MainPage() {
 
         if (userRole === 'driver' && !res.data.driver_profile_completed) {
           navigate('/profile/driver');
-        } 
-        else if (userRole === 'rider' && !res.data.rider_profile_completed) {
+        } else if (userRole === 'rider' && !res.data.rider_profile_completed) {
           navigate('/profile/rider');
         }
 
         const endpoint = userRole === 'rider' ? '/drivers/locations/' : '/riders/locations/';
         
         api.get(endpoint).then((res) => {
-            const transformed = res.data
-              .map((user: any) => {
-                const lat = parseFloat(user.lat ?? user.latitude);
-                const lng = parseFloat(user.lng ?? user.longitude);
-                const label = user.label ?? user.name ?? user.email ?? `User ${user.id}`;
-
-                if (isNaN(lat) || isNaN(lng)) return null; // Skip invalid coordinates
-
-                return { lat, lng, label };
-              })
-              .filter((loc) => loc !== null); // Remove any invalid entries
-
-            setOtherUsersLocations(transformed);
-          })
-          .catch((err) => console.error("Error fetching locations:", err));
+          const transformed = res.data
+            .map((user: any) => {
+              const lat = parseFloat(user.lat ?? user.latitude);
+              const lng = parseFloat(user.lng ?? user.longitude);
+              const label = user.label ?? user.name ?? user.email ?? `User ${user.id}`;
+              if (isNaN(lat) || isNaN(lng)) return null;
+              return { lat, lng, label };
+            })
+            .filter((loc) => loc !== null);
+          setOtherUsersLocations(transformed);
+        }).catch((err) => console.error("Error fetching locations:", err));
 
       })
       .catch(() => {
@@ -73,8 +68,6 @@ export default function MainPage() {
         console.error("Error getting location:", error);
       }
     );
-
-    console.log(setUserLocation);
   }, []);
 
   const handleLogout = () => {
@@ -90,12 +83,19 @@ export default function MainPage() {
     <div className="main-page">
       <Header email={email} onLogout={handleLogout} />
       <main className="main-content">
-        <Map
-          apiKey={apiKey}
-          center={center}
-          userLocation={userLocation || undefined}
-          otherUsersLocations={otherUsersLocations}
-        />
+        <div className="map-section">
+          <Map
+            apiKey={apiKey}
+            center={center}
+            userLocation={userLocation || undefined}
+            otherUsersLocations={otherUsersLocations}
+          />
+        </div>
+        <div className="filter-section">
+          <h3>Filters</h3>
+          {/* Add filter controls here */}
+          <p>Coming soon: filter by distance, rating, etc.</p>
+        </div>
       </main>
     </div>
   );
