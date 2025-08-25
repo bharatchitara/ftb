@@ -28,12 +28,23 @@ class DriverProfileSerializer(serializers.ModelSerializer):
         ]
 
 
-class LocationSerializer(serializers.ModelSerializer):
+class RiderLocationSerializer(serializers.ModelSerializer):
     label = serializers.SerializerMethodField()
 
     class Meta:
         model = FTBUsers
-        fields = ['latitude', 'longitude', 'label']
+        fields = ['label', 'latitude', 'longitude' , 'phone', 'email', 'address' ]
+
+    def get_label(self, obj):
+        return obj.name or obj.email
+
+
+class DriverLocationSerializer(serializers.ModelSerializer):
+    label = serializers.SerializerMethodField()
+
+    class Meta:
+        model = FTBUsers
+        fields = ['label', 'latitude', 'longitude' , 'phone', 'email', 'address', 'vehicle_type' ]
 
     def get_label(self, obj):
         return obj.name or obj.email

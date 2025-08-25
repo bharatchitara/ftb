@@ -9,6 +9,7 @@ interface UserLocation {
   email?: string;
   phone?: string;
   vehicleType?: string;
+  address?: string;
 }
 
 interface MapProps {
@@ -66,8 +67,9 @@ export default function Map({
               {selectedMarker.email && <p><strong>Email:</strong> {selectedMarker.email}</p>}
               {selectedMarker.phone && <p><strong>Phone:</strong> {selectedMarker.phone}</p>}
               {selectedMarker.vehicleType && <p><strong>Vehicle:</strong> {selectedMarker.vehicleType}</p>}
-              <p><strong>Lat:</strong> {selectedMarker.lat}</p>
-              <p><strong>Lng:</strong> {selectedMarker.lng}</p>
+              {selectedMarker.address && <p><strong>Address:</strong> {selectedMarker.address}</p>}
+              <p><strong>Latitude:</strong> {selectedMarker.lat}</p>
+              <p><strong>Longitude:</strong> {selectedMarker.lng}</p>
             </div>
           </InfoWindow>
         )}

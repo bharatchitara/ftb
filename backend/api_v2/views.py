@@ -9,7 +9,7 @@ import hashlib
 
 from .models import OneTimeCode
 from userlogin.models import FTBUsers
-from .serializers import OTPRequestSerializer, OTPVerifySerializer, ProfileSerializer, DriverProfileSerializer , LocationSerializer
+from .serializers import OTPRequestSerializer, OTPVerifySerializer, ProfileSerializer, DriverProfileSerializer , DriverLocationSerializer, RiderLocationSerializer
 
 
 class OTPRequestView(generics.GenericAPIView):
@@ -85,6 +85,8 @@ class MeView(APIView):
                 "is_driver":ftb_user.is_driver ,
                 "rider_profile_completed": ftb_user.rider_profile_completed,
                 "is_rider":ftb_user.is_rider ,
+                "latitude" : ftb_user.latitude,
+                "longitude":  ftb_user.longitude,
             })
         except FTBUsers.DoesNotExist:
             return Response({"error": "User profile not found"}, status=404)
@@ -158,7 +160,7 @@ class DriverLocationsView(APIView):
             latitude__isnull=False,
             longitude__isnull=False
         )
-        serializer = LocationSerializer(drivers, many=True)
+        serializer = DriverLocationSerializer(drivers, many=True)
         return Response(serializer.data)
 
 
@@ -173,5 +175,5 @@ class RiderLocationsView(APIView):
             latitude__isnull=False,
             longitude__isnull=False
         )
-        serializer = LocationSerializer(riders, many=True)
+        serializer = RiderLocationSerializer(riders, many=True)
         return Response(serializer.data)
