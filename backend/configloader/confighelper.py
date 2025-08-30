@@ -24,9 +24,11 @@ def getconfig():
     config.sections()
     basepath = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     print(basepath)
-    configpath = basepath + "/etc/config/ftb.ini"
+    # configpath = basepath + "/etc/config/ftb.ini"
 
-    config.read(configpath)
+    # config.read(configpath)
+    # read from render path 
+    config.read('/etc/secrets/ftb.ini')
 
     configdict = {
         
