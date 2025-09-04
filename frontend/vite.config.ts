@@ -10,6 +10,6 @@ export default defineConfig({
   preview: {
     host: '0.0.0.0',
     port: parseInt(process.env.PORT) || 5173,
-    allowedHosts: ['ftb-frontend.onrender.com', 'find-travel-buddy.onrender.com']
+    allowedHosts: true
   }
 })
