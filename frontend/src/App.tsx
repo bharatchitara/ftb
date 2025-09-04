@@ -2,9 +2,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import OTPLogin from './pages/OTPLogin';
 import MainPage from './pages/Landing'; 
-import ProfilePage from './pages/profile';
+import ProfilePage from './pages/Profile';
 import DriverProfilePage from './pages/DriverProfile';
-import TransitionPage from './components/transition';
+import TransitionPage from './components/Transition';
 
 export default function App() {
   return (
