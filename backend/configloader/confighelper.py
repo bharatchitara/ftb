@@ -23,12 +23,19 @@ def getconfig():
     config = configparser.ConfigParser()
     config.sections()
     basepath = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    print(basepath)
-    # configpath = basepath + "/etc/config/ftb.ini"
 
-    # config.read(configpath)
-    # read from render path 
-    config.read('/etc/secrets/ftb.ini')
+    local_config_path = basepath + "/etc/config/ftb.ini"
+    prod_config_path = "/etc/secrets/ftb.ini"
+
+    
+    if os.path.exists(local_config_path):
+        ## read from local path
+        configpath = local_config_path
+    else:
+        ## read from render path 
+        configpath = prod_config_path
+
+    config.read(configpath)
 
     configdict = {
         
@@ -51,6 +58,14 @@ def getconfig():
             "useL10N": eval(config.get("django", "useL10N")),
             "useTZ": eval(config.get("django", "useTZ")),
         },
+        "smtpconfig":{
+            "backend": config.get("smtpconfig", "backend"),
+            "host": config.get("smtpconfig", "host"),
+            "port": config.get("smtpconfig", "port"),
+            "use_tls": config.get("smtpconfig", "use_tls"),
+            "user": config.get("smtpconfig", "user"),
+            "password": config.get("smtpconfig", "password"),
+        }
         
 
     }

@@ -20,6 +20,7 @@ pymysql.install_as_MySQLdb()
 
 ftbtoolconfig = confighelper.getconfig()
 djangoconfig = ftbtoolconfig.get("django")
+smtpconfig = ftbtoolconfig.get("smtpconfig")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -95,6 +96,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'travel_buddy_backend.wsgi.application'
 
+
+EMAIL_BACKEND = smtpconfig['backend']
+EMAIL_HOST = smtpconfig['host']
+EMAIL_PORT = smtpconfig['port']
+EMAIL_USE_TLS = smtpconfig['use_tls']
+EMAIL_HOST_USER = smtpconfig['user']
+EMAIL_HOST_PASSWORD = smtpconfig['password']
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 

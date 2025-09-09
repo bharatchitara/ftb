@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated , AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 import hashlib
 
+from utils.emailhandler import send_email
+from travel_buddy_backend.settings import DEFAULT_FROM_EMAIL 
 from .models import OneTimeCode
 from userlogin.models import FTBUsers
 from .serializers import OTPRequestSerializer, OTPVerifySerializer, ProfileSerializer, DriverProfileSerializer , DriverLocationSerializer, RiderLocationSerializer
@@ -28,12 +30,27 @@ class OTPRequestView(generics.GenericAPIView):
 
         otp_obj, raw_code = OneTimeCode.generate_code(ftb_user)
 
-        send_mail(
-            subject="Your login code",
-            message=f"Your Find Travel Buddy login code is {raw_code}",
-            from_email=None,
-            recipient_list=[email],
-        )
+        ## email trigger code -starts ##
+        message = f"Your Find Travel Buddy login code is {raw_code}"
+        subject = "FTB - Your login code"
+        from_email = DEFAULT_FROM_EMAIL
+        to_email = [email]
+
+        for attempt in range(3):
+            email_send_flag = send_email(message, subject, from_email, to_email)
+
+            if email_send_flag:
+                ## success
+                break
+            else:
+                print(f"Email send attempt {attempt + 1} failed. Retrying...")
+                time.sleep(2)
+
+        if not email_send_flag:
+            return Response({"detail": "Failed to send OTP"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        ## email trigger code -ends ##
+       
+
         return Response({"detail": "OTP sent"}, status=status.HTTP_200_OK)
 
 
