@@ -142,3 +142,13 @@ input:checked + .slider:before {
   margin-right: 8px;
   color: #333;
 }
+
+
+h2 {
+  margin-bottom: 0px; 
+}
+
+h4 {
+  margin-top: 4px;     
+  color: grey;         
+}

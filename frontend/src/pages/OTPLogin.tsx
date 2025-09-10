@@ -57,11 +57,12 @@ export default function OTPLogin() {
     <div className="otp-container">
       {step === 'email' ? (
         <form onSubmit={handleSubmit(sendOTP)} className="otp-card">
-          <h2>Email login</h2>
+          <h2>Login</h2>
+          <h4>Enter your Email to proceed</h4>
           <input
             {...register('email', { required: true })}
             type="email"
-            placeholder="Enter your email"
+            placeholder="john_doe@example.com"
             className="otp-email-input"
           />
 
@@ -83,7 +84,8 @@ export default function OTPLogin() {
         </form>
       ) : (
         <div className="otp-card">
-          <h2>Enter OTP</h2>
+          <h2>Verify Details</h2>
+          <h4>OTP send to your Email</h4>
           <input
             type="text"
             maxLength={6}
