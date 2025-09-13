@@ -1,4 +1,4 @@
-import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, Marker, InfoWindow, Circle } from '@react-google-maps/api';
 import { useState } from 'react';
 
 interface UserLocation {
@@ -13,10 +13,11 @@ interface UserLocation {
 }
 
 interface MapProps {
-  apiKey: string;
   center: { lat: number; lng: number };
   userLocation?: { lat: number; lng: number };
   otherUsersLocations?: UserLocation[];
+  onMapLoad?: () => void;
+  radius?: number | null; // in kilometers
 }
 
 const mapContainerStyle = {
@@ -25,55 +26,79 @@ const mapContainerStyle = {
 };
 
 export default function Map({
-  apiKey,
   center,
   userLocation,
   otherUsersLocations = [],
+  onMapLoad,
+  radius,
 }: MapProps) {
   const [selectedMarker, setSelectedMarker] = useState<UserLocation | null>(null);
 
   return (
-    <LoadScript googleMapsApiKey={apiKey}>
-      <GoogleMap mapContainerStyle={mapContainerStyle} center={center} zoom={12}>
-        {/* User Marker */}
-        {userLocation && (
-          <Marker
-            position={userLocation}
-            label="You"
-            icon={{ url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' }}
-          />
-        )}
+    <GoogleMap
+      mapContainerStyle={mapContainerStyle}
+      center={center}
+      zoom={12}
+      onLoad={onMapLoad}
+    >
+      {/* Show radius circle */}
+      {userLocation && radius && (
+        <Circle
+          key={`${userLocation.lat},${userLocation.lng},${radius}`}
+          center={userLocation}
+          radius={radius * 1000}
+          options={{
+            fillColor: '#3182ce33',
+            strokeColor: '#3182ce',
+            strokeOpacity: 0.7,
+            fillOpacity: 0.15,
+            strokeWeight: 2,
+            clickable: false,
+            draggable: false,
+            editable: false,
+            zIndex: 1,
+          }}
+        />
+      )}
 
-        {/* Other Users' Markers */}
-        {otherUsersLocations.map((user, index) => (
-          <Marker
-            key={index}
-            position={{ lat: user.lat, lng: user.lng }}
-            label={user.label}
-            icon={{ url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' }}
-            onClick={() => setSelectedMarker(user)}
-          />
-        ))}
+      {/* User Marker */}
+      {userLocation && (
+        <Marker
+          position={userLocation}
+          label="You"
+          icon={{ url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' }}
+        />
+      )}
 
-        {/* InfoWindow with full details */}
-        {selectedMarker && (
-          <InfoWindow
-            position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
-            onCloseClick={() => setSelectedMarker(null)}
-          >
-            <div style={{ maxWidth: '200px' }}>
-              <h4>{selectedMarker.label}</h4>
-              {selectedMarker.name && <p><strong>Name:</strong> {selectedMarker.name}</p>}
-              {selectedMarker.email && <p><strong>Email:</strong> {selectedMarker.email}</p>}
-              {selectedMarker.phone && <p><strong>Phone:</strong> {selectedMarker.phone}</p>}
-              {selectedMarker.vehicleType && <p><strong>Vehicle:</strong> {selectedMarker.vehicleType}</p>}
-              {selectedMarker.address && <p><strong>Address:</strong> {selectedMarker.address}</p>}
-              <p><strong>Latitude:</strong> {selectedMarker.lat}</p>
-              <p><strong>Longitude:</strong> {selectedMarker.lng}</p>
-            </div>
-          </InfoWindow>
-        )}
-      </GoogleMap>
-    </LoadScript>
+      {/* Other Users' Markers */}
+      {otherUsersLocations.map((user) => (
+        <Marker
+          key={user.email || user.label}
+          position={{ lat: user.lat, lng: user.lng }}
+          label={user.label}
+          icon={{ url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' }}
+          onClick={() => setSelectedMarker(user)}
+        />
+      ))}
+
+      {/* InfoWindow with full details */}
+      {selectedMarker && (
+        <InfoWindow
+          position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
+          onCloseClick={() => setSelectedMarker(null)}
+        >
+          <div style={{ maxWidth: '200px' }}>
+            <h4>{selectedMarker.label}</h4>
+            {selectedMarker.name && <p><strong>Name:</strong> {selectedMarker.name}</p>}
+            {selectedMarker.email && <p><strong>Email:</strong> {selectedMarker.email}</p>}
+            {selectedMarker.phone && <p><strong>Phone:</strong> {selectedMarker.phone}</p>}
+            {selectedMarker.vehicleType && <p><strong>Vehicle:</strong> {selectedMarker.vehicleType}</p>}
+            {selectedMarker.address && <p><strong>Address:</strong> {selectedMarker.address}</p>}
+            <p><strong>Latitude:</strong> {selectedMarker.lat}</p>
+            <p><strong>Longitude:</strong> {selectedMarker.lng}</p>
+          </div>
+        </InfoWindow>
+      )}
+    </GoogleMap>
   );
 }

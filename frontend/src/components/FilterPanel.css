@@ -1,0 +1,52 @@
+.improved-filter-panel {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 1.5rem 1.2rem;
+  max-width: 320px;
+  margin: 0 auto;
+  font-family: inherit;
+}
+
+.filter-title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #2d3748;
+  text-align: center;
+}
+
+.filter-group {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-label {
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.filter-select {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  background: #f9fafb;
+  transition: border 0.2s;
+}
+
+.filter-select:focus {
+  border: 1.5px solid #3182ce;
+  outline: none;
+}
+
+@media (max-width: 600px) {
+  .improved-filter-panel {
+    max-width: 100%;
+    padding: 1rem 0.5rem;
+  }
+  .filter-title {
+    font-size: 1.1rem;
+  }
+}

@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import Header from '../components/Header';
 import Map from '../components/Map';
 import FilterPanel from '../components/FilterPanel';
+import OverlayTransition from '../components/OverlayTransition';
 import { haversineDistance } from '../utils/haversine';
 import './Landing.css';
 
@@ -26,6 +27,11 @@ export default function MainPage() {
     distance: 'any',
     vehicle: 'any',
   });
+
+  const [loading, setLoading] = useState(true);
+  const [userLocationLoaded, setUserLocationLoaded] = useState(false);
+  const [otherUsersLoaded, setOtherUsersLoaded] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   const navigate = useNavigate();
   const apiKey = import.meta.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -72,7 +78,11 @@ export default function MainPage() {
             })
             .filter((loc) => loc !== null);
           setOtherUsersLocations(transformed);
-        }).catch((err) => console.error('Error fetching locations:', err));
+          setOtherUsersLoaded(true);
+        }).catch((err) => {
+          console.error('Error fetching locations:', err);
+          setOtherUsersLoaded(true);
+        });
       })
       .catch(() => {
         alert('Session expired or invalid token. Redirecting to login...');
@@ -92,6 +102,7 @@ export default function MainPage() {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
+          setUserLocationLoaded(true);
         },
         (error) => {
           console.error(`Attempt ${attempts + 1} failed:`, error);
@@ -121,16 +132,26 @@ export default function MainPage() {
           } else {
             console.error('No valid location found in user profile.');
           }
+          setUserLocationLoaded(true);
         })
         .catch((err) => {
           console.error('Failed to fetch location from DB:', err);
+          setUserLocationLoaded(true);
         });
     };
 
     tryGetLocation();
   }, []);
 
+  useEffect(() => {
+    if (userLocationLoaded && otherUsersLoaded && mapLoaded) {
+      setLoading(false);
+    }
+  }, [userLocationLoaded, otherUsersLoaded, mapLoaded]);
 
+  const handleMapLoad = useCallback(() => {
+    setMapLoaded(true);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
@@ -156,6 +177,13 @@ export default function MainPage() {
 
   return (
     <div className="main-page">
+      {loading && (
+        <OverlayTransition
+          message="Getting the Dashboard Ready..."
+          duration={10000}
+          onComplete={() => setLoading(false)}
+        />
+      )}
       <Header email={email} onLogout={handleLogout} />
       <main className="main-content">
         <div className="map-section">
@@ -164,6 +192,8 @@ export default function MainPage() {
             center={center}
             userLocation={userLocation || undefined}
             otherUsersLocations={filteredLocations}
+            onMapLoad={handleMapLoad}
+            radius={filters.distance === 'any' ? null : Number(filters.distance)}
           />
         </div>
         <div className="filter-section">
@@ -177,4 +207,3 @@ export default function MainPage() {
     </div>
   );
 }
-

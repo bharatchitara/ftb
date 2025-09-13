@@ -3,6 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { api } from '../api';
 import './OTPLogin.css';
+import OverlayTransition from '../components/OverlayTransition';
+
+// Add a simple spinner (or use a library spinner if you prefer)
+function Spinner() {
+  return (
+    <span className="otp-spinner" style={{
+      display: 'inline-block',
+      width: '18px',
+      height: '18px',
+      border: '2px solid #fff',
+      borderTop: '2px solid #3182ce',
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite',
+      marginLeft: '8px',
+      verticalAlign: 'middle'
+    }} />
+  );
+}
 
 export default function OTPLogin() {
   const [step, setStep] = useState<'email' | 'otp'>('email');
@@ -13,6 +31,8 @@ export default function OTPLogin() {
   const [otpValues, setOtpValues] = useState(Array(6).fill(''));
   const [role, setRole] = useState<'rider' | 'driver'>('rider');
   const [cooldown, setCooldown] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState(false); // <-- for send code button
 
   useEffect(() => {
     if (cooldown > 0) {
@@ -22,10 +42,12 @@ export default function OTPLogin() {
   }, [cooldown]);
 
   const sendOTP = async (data: any) => {
+    setSending(true);
     await api.post('/auth/otp/request/', { email: data.email, role });
     setEmail(data.email);
     setStep('otp');
     setCooldown(30);
+    setSending(false);
   };
 
   const resendOTP = async () => {
@@ -37,6 +59,7 @@ export default function OTPLogin() {
 
   const verifyOTP = async () => {
     const code = otpValues.join('');
+    setLoading(true);
     try {
       const res = await api.post('/auth/otp/verify/', { email, code, role });
       localStorage.setItem('access_token', res.data.access);
@@ -45,6 +68,7 @@ export default function OTPLogin() {
       navigate('/dashboard');
     } catch (error) {
       alert('Invalid or expired OTP');
+      setLoading(false);
     }
   };
 
@@ -55,6 +79,13 @@ export default function OTPLogin() {
 
   return (
     <div className="otp-container">
+      {loading && (
+        <OverlayTransition
+          message="Verifying OTP..."
+          duration={5000}
+          onComplete={() => setLoading(false)}
+        />
+      )}
       {step === 'email' ? (
         <form onSubmit={handleSubmit(sendOTP)} className="otp-card">
           <h2>Login</h2>
@@ -80,7 +111,16 @@ export default function OTPLogin() {
             <span className={role === 'driver' ? 'active-label' : ''}>Driver</span>
           </div>
 
-          <button type="submit" className="otp-button">Send code</button>
+          <button type="submit" className="otp-button" disabled={sending}>
+            {sending ? (
+              <>
+                Sending
+                <Spinner />
+              </>
+            ) : (
+              'Send code'
+            )}
+          </button>
         </form>
       ) : (
         <div className="otp-card">
@@ -95,7 +135,7 @@ export default function OTPLogin() {
             placeholder=""
           />
 
-          <button onClick={verifyOTP} className="otp-button">Verify</button>
+          <button onClick={verifyOTP} className="otp-button"  disabled={loading}>Verify</button>
 
           <div className="otp-resend">
             {cooldown > 0 ? (
@@ -106,6 +146,14 @@ export default function OTPLogin() {
           </div>
         </div>
       )}
+      {/* Spinner animation keyframes */}
+      <style>
+        {`
+          @keyframes spin {
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
     </div>
   );
 }
