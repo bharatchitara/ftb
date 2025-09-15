@@ -11,7 +11,8 @@ export default function MobileWarning() {
       justifyContent: 'center',
       fontSize: 20,
       padding: 24,
-      textAlign: 'center'
+      textAlign: 'center',
+      color: '#222' // <-- Make sure text is dark!
     }}>
       <strong>Mobile Not Supported</strong>
       <p>
