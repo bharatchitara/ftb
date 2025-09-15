@@ -6,8 +6,18 @@ import MainPage from './pages/Landing';
 import ProfilePage from './pages/Profile';
 import DriverProfilePage from './pages/DriverProfile';
 import TransitionPage from './components/Transition';
+import MobileWarning from './components/MobileWarning';
+
+function isMobile() {
+  return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
 
 export default function App() {
+
+  if (isMobile()) {
+    return <MobileWarning />;
+  }
+
   const apiKey = import.meta.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   return (
     <LoadScript googleMapsApiKey={apiKey}>
