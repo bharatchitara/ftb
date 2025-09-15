@@ -11,7 +11,7 @@ class RideRequestViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(rider=self.request.user)
+        ride_request = serializer.save(rider=self.request.user)
 
         ## send email to driver when ride request is created
 
@@ -19,10 +19,16 @@ class RideRequestViewSet(viewsets.ModelViewSet):
         rider_name = self.request.user.name or self.request.user.email
         
         subject='FTB- New Ride Request'
-        message = """
-            You have a new ride request from {rider_name}.
-            <br> Here are the details:
-            <br> Pickup latitude: {ride_request.pickup_lat}, Pickup longitude: {ride_request.pickup_lng}
+        message = f"""
+        Hi Buddy,
+
+        You have a new ride request from Rider- {rider_name}.
+        Here are the details:
+        Pickup latitude: {ride_request.pickup_lat}, Pickup longitude: {ride_request.pickup_lng}
+        
+        --
+        Thanks
+        Find Travel Buddy Team
         """
 
         from_email = DEFAULT_FROM_EMAIL
