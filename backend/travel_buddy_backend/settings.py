@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'userlogin',
     'api_v2',
     'corsheaders',
+    'rides',
 ]
 
 

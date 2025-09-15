@@ -66,6 +66,7 @@ export default function MainPage() {
               if (isNaN(lat) || isNaN(lng)) return null;
 
               return {
+                id: user.id,
                 lat,
                 lng,
                 label: user.label ?? user.name ?? user.email ?? `User ${user.id}`,

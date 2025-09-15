@@ -1,4 +1,3 @@
-from django.core.mail import send_mail
 from django.utils import timezone
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -98,6 +97,7 @@ class MeView(APIView):
         try:
             ftb_user = FTBUsers.objects.get(email=request.user.email)
             return Response({
+                "id": ftb_user.id,
                 "email": ftb_user.email,
                 "driver_profile_completed": ftb_user.driver_profile_completed,
                 "is_driver":ftb_user.is_driver ,

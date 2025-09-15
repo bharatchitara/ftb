@@ -12,7 +12,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = FTBUsers
         fields = [
-            'name', 'email', 'phone', 'gender',
+            'id','name', 'email', 'phone', 'gender',
             'address', 'latitude', 'longitude',
             'rider_profile_completed'
         ]
@@ -21,7 +21,7 @@ class DriverProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = FTBUsers
         fields = [
-            'name', 'email', 'phone', 'gender',
+            'id', 'name', 'email', 'phone', 'gender',
             'address', 'latitude', 'longitude',
             'driver_profile_completed',
             'vehicle_type', 'vehicle_number'
@@ -33,7 +33,7 @@ class RiderLocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FTBUsers
-        fields = ['label', 'latitude', 'longitude' , 'phone', 'email', 'address' ]
+        fields = ['id', 'label', 'latitude', 'longitude' , 'phone', 'email', 'address' ]
 
     def get_label(self, obj):
         return obj.name or obj.email
@@ -44,7 +44,7 @@ class DriverLocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FTBUsers
-        fields = ['label', 'latitude', 'longitude' , 'phone', 'email', 'address', 'vehicle_type' ]
+        fields = ['id', 'label', 'latitude', 'longitude' , 'phone', 'email', 'address', 'vehicle_type' ]
 
     def get_label(self, obj):
         return obj.name or obj.email

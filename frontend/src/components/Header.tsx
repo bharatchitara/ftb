@@ -8,11 +8,21 @@ interface HeaderProps {
 }
 
 export default function Header({ email, onLogout, profileCompleted }: HeaderProps) {
+  const userRole = localStorage.getItem('user_role');
+  const profilePath =
+    userRole === 'driver'
+      ? '/profile/driver'
+      : userRole === 'rider'
+      ? '/profile/rider'
+      : '/profile';
+
   return (
     <header className="main-header">
-      <h1>Find Travel Buddy</h1>
+      <Link to="/dashboard" className="logo-link">
+        <h1>Find Travel Buddy</h1>
+      </Link>
       <div className="main-user">
-        <Link to="/profile" className="avatar-link">
+        <Link to={profilePath} className="avatar-link">
           <div className="avatar-circle">
             {email.charAt(0).toUpperCase()}
           </div>

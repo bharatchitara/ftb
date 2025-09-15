@@ -1,7 +1,9 @@
 import { GoogleMap, Marker, InfoWindow, Circle } from '@react-google-maps/api';
 import { useState } from 'react';
+import RideRequestButton from './RideRequestButton';
 
 interface UserLocation {
+  id: number;
   lat: number;
   lng: number;
   label: string;
@@ -86,8 +88,8 @@ export default function Map({
         <InfoWindow
           position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
           onCloseClick={() => setSelectedMarker(null)}
-        >
-          <div style={{ maxWidth: '200px' }}>
+        > 
+          <div style={{ maxWidth: '500px' }}>
             <h4>{selectedMarker.label}</h4>
             {selectedMarker.name && <p><strong>Name:</strong> {selectedMarker.name}</p>}
             {selectedMarker.email && <p><strong>Email:</strong> {selectedMarker.email}</p>}
@@ -96,6 +98,13 @@ export default function Map({
             {selectedMarker.address && <p><strong>Address:</strong> {selectedMarker.address}</p>}
             <p><strong>Latitude:</strong> {selectedMarker.lat}</p>
             <p><strong>Longitude:</strong> {selectedMarker.lng}</p>
+            {selectedMarker.email && userLocation && (
+              <RideRequestButton
+                driverId={selectedMarker.id}
+                pickupLat={userLocation.lat}
+                pickupLng={userLocation.lng}
+              />
+            )}
           </div>
         </InfoWindow>
       )}

@@ -6,6 +6,16 @@ export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
+export const createRideRequest = (driverId: number, pickup_lat: number, pickup_lng: number) =>
+  api.post('/api/rides/requests/', { driver: driverId, pickup_lat, pickup_lng });
+
+export const getRideRequests = () =>
+  api.get('/api/rides/requests/');
+
+export const updateRideRequest = (id: number, data: any) =>
+  api.patch(`/api/rides/requests/${id}/`, data);
+
+
 
 const publicEndpoints = ['/auth/otp/request/', '/auth/otp/verify/'];
 

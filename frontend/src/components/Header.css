@@ -22,6 +22,18 @@
   gap: 1rem;
 }
 
+.logo-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo-link:visited,
+.logo-link:active,
+.logo-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
 .avatar-circle {
   background-color: #ffffff;
   color: #1a1a1a;
