@@ -1,5 +1,7 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from django.db.models import Q
 from .models import RideRequest
 from .serializers import RideRequestSerializer
 
@@ -44,11 +46,11 @@ class RideRequestViewSet(viewsets.ModelViewSet):
         if role == 'rider':
             # if rider, we wil send 0 
             der_role = 0 
-            return RideRequest.objects.filter(rider=user), der_role
+            return RideRequest.objects.filter(rider=user).filter(~Q(status='accepted')), der_role
         elif role == 'driver':
             # if driver, we wil send 1
             der_role = 1
-            return RideRequest.objects.filter(driver=user), der_role
+            return RideRequest.objects.filter(driver=user).filter(~Q(status='accepted')), der_role
         return RideRequest.objects.none()
 
 
@@ -85,3 +87,17 @@ class RideRequestViewSet(viewsets.ModelViewSet):
                 })
             return Response(result)
 
+
+    @action(detail=True, methods=['post'])
+    def accept(self, request, pk=None):
+        ride_request = RideRequest.objects.get(id = pk)
+        ride_request.status = 'accepted'
+        ride_request.save()
+        return Response({'status': 'accepted'})
+
+    @action(detail=True, methods=['post'])
+    def reject(self, request, pk=None):
+        ride_request = RideRequest.objects.get(id = pk)
+        ride_request.status = 'rejected'
+        ride_request.save()
+        return Response({'status': 'rejected'})
