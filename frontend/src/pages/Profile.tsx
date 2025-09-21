@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import Header from '../components/Header';
 import OverlayTransition from '../components/OverlayTransition';
+import AddressAutocomplete from '../components/AddressAutocomplete';
+import ReturnToDashboardButton from '../components/ReturnToDashboardButton';
 import './Profile.css';
 
 export default function ProfilePage() {
@@ -18,6 +20,7 @@ export default function ProfilePage() {
   const [error, setError] = useState('');
   const [profileCompleted, setProfileCompleted] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -35,7 +38,6 @@ export default function ProfilePage() {
         });
         setEmail(data.email || '');
 
-        // Check if profile is completed
         if (data.name && data.gender) {
           setProfileCompleted(true);
         }
@@ -47,13 +49,22 @@ export default function ProfilePage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle address autocomplete selection
+  const handleAddressSelect = ({ address, latitude, longitude }) => {
+    setFormData({
+      ...formData,
+      address,
+      latitude: latitude.toString(),
+      longitude: longitude.toString(),
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     try {
       await api.put('/auth/profile/', formData);
       setShowOverlay(true);
-
     } catch (error) {
       setError(error.response.data);
     }
@@ -67,9 +78,19 @@ export default function ProfilePage() {
 
   return (
     <div className="profile-page">
+      {loading && (
+        <OverlayTransition
+          message="Fetching the ride information..."
+          duration={5000}
+          onComplete={() => setLoading(false)}
+        />
+      )}
+      
       <div className="profile-header">
         <Header email={email} onLogout={handleLogout} profileCompleted={profileCompleted} />
+        {profileCompleted && <ReturnToDashboardButton />}
       </div>
+      
       <div className="profile-scrollable">
         <div className="profile-container">
           <h2>Complete Your Profile</h2>
@@ -82,6 +103,7 @@ export default function ProfilePage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
+                className="profile-input"
               />
             </label>
 
@@ -92,6 +114,7 @@ export default function ProfilePage() {
                 value={formData.gender}
                 onChange={handleChange}
                 required
+                className="profile-input"
               >
                 <option value="">Select</option>
                 <option value="male">Male</option>
@@ -106,17 +129,16 @@ export default function ProfilePage() {
                 value={formData.phone}
                 onChange={handleChange}
                 required
+                className="profile-input"
               />
               <small>Enter the 10 Digit Phone Number without the country code</small>
             </label>
 
             <label>Address:
-              <input
-                type="text"
-                name="address"
+              <AddressAutocomplete
                 value={formData.address}
-                onChange={handleChange}
-                required
+                onChange={address => setFormData({ ...formData, address })}
+                onSelect={handleAddressSelect}
               />
             </label>
 
@@ -127,8 +149,10 @@ export default function ProfilePage() {
                 value={formData.latitude}
                 onChange={handleChange}
                 required
+                readOnly
+                className="profile-input"
               />
-              <small>Get the Latitude from Google Maps</small>
+              <small>Auto-filled from address</small>
             </label>
 
             <label>Longitude:
@@ -138,8 +162,10 @@ export default function ProfilePage() {
                 value={formData.longitude}
                 onChange={handleChange}
                 required
+                readOnly
+                className="profile-input"
               />
-              <small>Get the Longitude from Google Maps</small>
+              <small>Auto-filled from address</small>
             </label>
 
             {error && <div className="error-message">{error}</div>}
@@ -151,7 +177,6 @@ export default function ProfilePage() {
                 onComplete={() => navigate('/dashboard')}
               />
             )}
-
 
             <button type="submit">Save</button>
           </form>

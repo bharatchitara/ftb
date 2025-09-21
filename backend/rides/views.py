@@ -1,4 +1,5 @@
 from rest_framework import viewsets, permissions
+from rest_framework.response import Response
 from .models import RideRequest
 from .serializers import RideRequestSerializer
 
@@ -39,8 +40,48 @@ class RideRequestViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.user_role == 'rider':
-            return RideRequest.objects.filter(rider=user)
-        elif user.user_role == 'driver':
-            return RideRequest.objects.filter(driver=user)
+        role = self.request.query_params.get('role')
+        if role == 'rider':
+            # if rider, we wil send 0 
+            der_role = 0 
+            return RideRequest.objects.filter(rider=user), der_role
+        elif role == 'driver':
+            # if driver, we wil send 1
+            der_role = 1
+            return RideRequest.objects.filter(driver=user), der_role
         return RideRequest.objects.none()
+
+
+    def list(self, request, *args, **kwargs):
+        queryset, role  = self.get_queryset()
+        result = []
+        if (role == 0 ):
+            ## for the rider view
+            for req in queryset:
+                result.append({
+                    'id': req.id,
+                    'status': req.status,
+                    'driver_name': str(req.driver.name),
+                    'driver_email': str(req.driver.email),
+                    'driver_phone': str(req.driver.phone),
+                    'pickup_lat': req.pickup_lat,
+                    'pickup_lng': req.pickup_lng,
+                    'created_at': req.created_at,
+                })
+            return Response(result)
+        
+        elif (role == 1 ):
+            ## for the driver view
+            for req in queryset:
+                result.append({
+                    'id': req.id,
+                    'status': req.status,
+                    'rider_name': str(req.rider.name),
+                    'rider_email': str(req.rider.email),
+                    'rider_phone': str(req.rider.phone),
+                    'pickup_lat': req.pickup_lat,
+                    'pickup_lng': req.pickup_lng,
+                    'created_at': req.created_at,
+                })
+            return Response(result)
+

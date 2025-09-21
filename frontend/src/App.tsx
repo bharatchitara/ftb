@@ -7,6 +7,7 @@ import ProfilePage from './pages/Profile';
 import DriverProfilePage from './pages/DriverProfile';
 import TransitionPage from './components/Transition';
 import MobileWarning from './components/MobileWarning';
+import RideRequestsPage from './pages/RideRequestsPage';
 
 function isMobile() {
   return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -20,7 +21,7 @@ export default function App() {
 
   const apiKey = import.meta.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   return (
-    <LoadScript googleMapsApiKey={apiKey}>
+    <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/profile/rider" element={<ProfilePage />} />
           <Route path="/profile/driver" element={<DriverProfilePage />} />
           <Route path="/transition" element={<TransitionPage />} />
+          <Route path="/ride-requests" element={<RideRequestsPage />} />
         </Routes>
       </BrowserRouter>
     </LoadScript>

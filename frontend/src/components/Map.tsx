@@ -44,24 +44,25 @@ export default function Map({
       onLoad={onMapLoad}
     >
       {/* Show radius circle */}
-      {userLocation && radius && (
-        <Circle
-          key={`${userLocation.lat},${userLocation.lng},${radius}`}
-          center={userLocation}
-          radius={radius * 1000}
-          options={{
-            fillColor: '#3182ce33',
-            strokeColor: '#3182ce',
-            strokeOpacity: 0.7,
-            fillOpacity: 0.15,
-            strokeWeight: 2,
-            clickable: false,
-            draggable: false,
-            editable: false,
-            zIndex: 1,
-          }}
-        />
-      )}
+      {/* {userLocation && radius (
+        // && (
+        // <Circle
+        //   key={`${userLocation.lat},${userLocation.lng},${radius}`}
+        //   center={userLocation}
+        //   radius={radius * 1000}
+        //   options={{
+        //     fillColor: '#3182ce33',
+        //     strokeColor: '#3182ce',
+        //     strokeOpacity: 0.7,
+        //     fillOpacity: 0.15,
+        //     strokeWeight: 2,
+        //     clickable: false,
+        //     draggable: false,
+        //     editable: false,
+        //     zIndex: 1,
+        //   }}
+        // />
+      )} */}
 
       {/* User Marker */}
       {userLocation && (

@@ -1,0 +1,52 @@
+.ride-requests-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ride-requests-table th,
+.ride-requests-table td {
+  padding: 14px 16px;
+  text-align: left;
+}
+
+.ride-requests-table th {
+  background: #f5f7fa;
+  font-weight: 600;
+  color: #333;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.ride-requests-table tr {
+  transition: background 0.2s;
+}
+
+.ride-requests-table tr:hover {
+  background: #f0f4fa;
+}
+
+.ride-requests-table td {
+  border-bottom: 1px solid #f0f0f0;
+  color: #444;
+}
+
+.ride-requests-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ride-requests-table a {
+  color: #1976d2;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.ride-requests-table a:hover {
+  color: #0d47a1;
+}

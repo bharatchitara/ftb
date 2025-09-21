@@ -28,6 +28,10 @@ export default function FilterPanel({ distance, vehicle, onFilterChange }: Filte
           <option value="2">2 km</option>
           <option value="5">5 km</option>
           <option value="10">10 km</option>
+          <option value="20">20 km</option>
+          <option value="30">30 km</option>
+          <option value="50">50 km</option>
+          <option value="1500">1500 km</option>
         </select>
       </div>
       <div className="filter-group">

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from configloader import confighelper
 from pathlib import Path
+from datetime import timedelta
 
 import pymysql
 pymysql.install_as_MySQLdb()
@@ -172,6 +173,15 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ]
 }
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+}
+
+SESSION_COOKIE_AGE = 3600  ## 1 hour
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  
+
 
 # for dev only
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend" 
