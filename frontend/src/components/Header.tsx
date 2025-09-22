@@ -9,6 +9,9 @@ interface HeaderProps {
 
 export default function Header({ email, onLogout, profileCompleted }: HeaderProps) {
   const userRole = localStorage.getItem('user_role');
+  
+  const displayRole = userRole ? userRole.charAt(0).toUpperCase() + userRole.slice(1) : '';
+  
   const profilePath =
     userRole === 'driver'
       ? '/profile/driver'
@@ -28,6 +31,9 @@ export default function Header({ email, onLogout, profileCompleted }: HeaderProp
       <nav className="header-nav">
         <ul className="header-links">
           <li>
+            <Link to="/dashboard"> Home</Link>
+          </li>
+          <li>
             <Link to="/ride-requests">Ride Requests</Link>
           </li>
         </ul>
@@ -38,6 +44,12 @@ export default function Header({ email, onLogout, profileCompleted }: HeaderProp
            <div className="avatar-circle">
              {email.charAt(0).toUpperCase()}
            </div>
+        
+          {displayRole && (
+            <span style={{ marginTop: 4, fontWeight: 500, color: '#a29a9aff', fontSize: '0.95em' }}>
+              {displayRole}
+            </span>
+          )}
         </Link>
         <button onClick={onLogout}>Logout</button>
       </div>

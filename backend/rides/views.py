@@ -93,6 +93,37 @@ class RideRequestViewSet(viewsets.ModelViewSet):
         ride_request = RideRequest.objects.get(id = pk)
         ride_request.status = 'accepted'
         ride_request.save()
+
+        ## send the mail to rider that driver has accepted the ride request
+
+        rider_email = ride_request.rider.email
+
+        subject='FTB- Ride Request Accepted'
+        message = f"""
+        Hi,
+
+        The Buddy- {ride_request.driver.name} have accepted your ride request.
+        
+        Here are the details of the buddy to contact:
+        
+        Name: {ride_request.driver.name}
+        Email: {ride_request.driver.email}
+        Phone: {ride_request.driver.phone}
+        
+
+        Enjoy the Ride...
+
+        --
+        Thanks
+        Find Travel Buddy Team
+        """
+
+        from_email = DEFAULT_FROM_EMAIL
+        to_email = [rider_email]
+        
+        email_send_flag = send_email(message, subject, from_email, to_email)
+
+
         return Response({'status': 'accepted'})
 
     @action(detail=True, methods=['post'])
@@ -100,4 +131,25 @@ class RideRequestViewSet(viewsets.ModelViewSet):
         ride_request = RideRequest.objects.get(id = pk)
         ride_request.status = 'rejected'
         ride_request.save()
+        
+        ## send the mail to rider that driver has rejected the ride request
+
+        rider_email = ride_request.rider.email
+
+        subject='FTB- Ride Request Rejected'
+        message = f"""
+        Hi,
+
+        The Buddy- {ride_request.driver.name} have Rejected your ride request.
+        you can try with other buddies.
+        
+        Thanks
+        Find Travel Buddy Team
+        """
+
+        from_email = DEFAULT_FROM_EMAIL
+        to_email = [rider_email]
+        
+        email_send_flag = send_email(message, subject, from_email, to_email)
+
         return Response({'status': 'rejected'})
