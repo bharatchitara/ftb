@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import Header from '../components/Header';
 import OverlayTransition from '../components/OverlayTransition';
-import AddressAutocomplete from '../components/AddressAutocomplete';
 import ReturnToDashboardButton from '../components/ReturnToDashboardButton';
 import './Profile.css';
 
@@ -49,16 +48,7 @@ export default function ProfilePage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle address autocomplete selection
-  const handleAddressSelect = ({ address, latitude, longitude }) => {
-    setFormData({
-      ...formData,
-      address,
-      latitude: latitude.toString(),
-      longitude: longitude.toString(),
-    });
-  };
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -135,10 +125,12 @@ export default function ProfilePage() {
             </label>
 
             <label>Address:
-              <AddressAutocomplete
+              <input
+                type="text"
+                name="address"
                 value={formData.address}
-                onChange={address => setFormData({ ...formData, address })}
-                onSelect={handleAddressSelect}
+                onChange={handleChange}
+                required
               />
             </label>
 
@@ -152,7 +144,7 @@ export default function ProfilePage() {
                 readOnly
                 className="profile-input"
               />
-              <small>Auto-filled from address</small>
+              <small>Get the Latitude from Google Maps</small>
             </label>
 
             <label>Longitude:
@@ -165,7 +157,7 @@ export default function ProfilePage() {
                 readOnly
                 className="profile-input"
               />
-              <small>Auto-filled from address</small>
+              <small>Get the Latitude from Google Maps</small>
             </label>
 
             {error && <div className="error-message">{error}</div>}
